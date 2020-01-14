@@ -5,32 +5,9 @@ library (reshape2)
 library(tidyverse)
 library(lubridate)
 
+## dataset combines the 
+dat_count <- read.csv("./Data/dat_count.csv") 
 
-
-# read in flow data
-flow <- read.csv("./tench/Euston flows 1945 to 2008-mid Murray.csv")
-flow <- mutate(flow, date = dmy(paste(day, month, year)))
-
-ggplot(flow, aes(y = flow, x = date)) +
-  geom_line() +
-  theme_classic()
-
-flow.yr <- group_by(flow, year) %>%
-  dplyr::summarise(flow = sum(flow))  
-
-ggplot(flow.yr, aes(y = flow, x = year)) +
-  geom_line() +
-  theme_classic()
-
-# read in data from Dave
-dat <- read.csv("./tench/Tench.csv")
-glimpse(dat)
-dat <- select(dat, n.fishers, tench.kg, carp.kg, redfin.kg, year, fish.days)
-
-dat <- left_join(dat, flow.yr) 
-
-
-#dat_count <- dat[,c("n.fishers", "redfin", "carp", "silver.perch", "golden.perch", "murray.cod", "year", "fish.days",  "flow")]
 ts_df <- melt (dat_count, id.vars=c("n.fishers", "year", "fish.days",  "flow"))
 
 ggplot (ts_df, aes(year, value, group=variable))+
